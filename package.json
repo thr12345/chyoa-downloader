@@ -1,0 +1,72 @@
+{
+  "name": "chyoa-downloader",
+  "version": "1.0.0",
+  "description": "A CLI tool to download CHYOA stories and their parent stories as markdown files, with WebP image conversion, base64 embedding, single-file output, interactive login and session persistence",
+  "main": "index.js",
+  "module": "index.js",
+  "type": "module",
+  "bin": {
+    "chyoa-downloader": "./index.js"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir . --target node --format esm",
+    "prepublish": "bun run build"
+  },
+  "keywords": [
+    "chyoa",
+    "downloader",
+    "cli",
+    "markdown",
+    "stories"
+  ],
+  "author": "CHYOA Downloader Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/chyoa-downloader.git"
+  },
+  "homepage": "https://github.com/your-username/chyoa-downloader",
+  "bugs": {
+    "url": "https://github.com/your-username/chyoa-downloader/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/sharp": "^0.32.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@types/puppeteer": "^7.0.4",
+    "@types/yargs": "^17.0.33"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "consola": "^3.4.2",
+    "puppeteer": "^24.17.1",
+    "sharp": "^0.34.3",
+    "yargs": "^18.0.0"
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "arrowParens": "always",
+    "plugins": [
+      "@ianvs/prettier-plugin-sort-imports"
+    ]
+  }
+}
