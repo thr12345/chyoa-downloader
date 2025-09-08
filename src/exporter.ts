@@ -1,19 +1,18 @@
-import { promises as fs } from "fs";
-import path from "path";
-import * as cheerio from "cheerio";
-import sharp from "sharp";
-import { Page } from "puppeteer";
-
-import type { StoryData, Chapter } from "./types.js";
+import { promises as fs } from 'fs';
+import path from 'path';
+import * as cheerio from 'cheerio';
+import { Page } from 'puppeteer';
+import sharp from 'sharp';
+import type { Chapter, StoryData } from './types.js';
 import {
   BASE_URL,
+  cleanHtmlEntities,
+  convertToWebpFilename,
+  getFilenameFromUrl,
+  getMimeTypeFromExtension,
   IMAGES_DIR,
   sanitizeFilename,
-  cleanHtmlEntities,
-  getFilenameFromUrl,
-  convertToWebpFilename,
-  getMimeTypeFromExtension,
-} from "./utils.js";
+} from './utils.js';
 
 export class StoryExporter {
   private outputDir: string;
@@ -77,12 +76,12 @@ export class StoryExporter {
     index: number,
   ): Promise<void> {
     if (!this.page) {
-      console.warn("No browser page available for image download");
+      console.warn('No browser page available for image download');
       return;
     }
 
     try {
-      const fullUrl = imageUrl.startsWith("http")
+      const fullUrl = imageUrl.startsWith('http')
         ? imageUrl
         : `${BASE_URL}${imageUrl}`;
 
@@ -103,21 +102,21 @@ export class StoryExporter {
       const filepath = path.join(this.outputDir, IMAGES_DIR, filename);
 
       // For protected images, try to get the actual image if authentication works
-      if (fullUrl.includes("default.jpg")) {
-        console.log("⚠️  Protected image detected - skipping placeholder");
+      if (fullUrl.includes('default.jpg')) {
+        console.log('⚠️  Protected image detected - skipping placeholder');
         // Skip downloading placeholder images entirely
         return;
       }
 
       // Navigate to the image URL using the authenticated browser session
       const response = await this.page.goto(fullUrl, {
-        waitUntil: "networkidle0",
+        waitUntil: 'networkidle0',
         timeout: 15000,
       });
 
       if (!response || !response.ok()) {
         console.warn(
-          `Failed to load image ${fullUrl}: HTTP ${response?.status() || "unknown"}`,
+          `Failed to load image ${fullUrl}: HTTP ${response?.status() || 'unknown'}`,
         );
         return;
       }
@@ -143,7 +142,7 @@ export class StoryExporter {
             conversionError,
           );
           // Fallback to original format
-          filename = filename.replace(".webp", originalExtension);
+          filename = filename.replace('.webp', originalExtension);
         }
       } else {
         console.log(
@@ -163,32 +162,32 @@ export class StoryExporter {
     index: number,
   ): Promise<void> {
     if (!this.page) {
-      console.warn("No browser page available for image processing");
+      console.warn('No browser page available for image processing');
       return;
     }
 
     try {
-      const fullUrl = imageUrl.startsWith("http")
+      const fullUrl = imageUrl.startsWith('http')
         ? imageUrl
         : `${BASE_URL}${imageUrl}`;
 
       console.log(`Processing image for embedding: ${fullUrl}`);
 
       // For protected images, skip placeholder images
-      if (fullUrl.includes("default.jpg")) {
-        console.log("⚠️  Protected image detected - skipping placeholder");
+      if (fullUrl.includes('default.jpg')) {
+        console.log('⚠️  Protected image detected - skipping placeholder');
         return;
       }
 
       // Navigate to the image URL using the authenticated browser session
       const response = await this.page.goto(fullUrl, {
-        waitUntil: "networkidle0",
+        waitUntil: 'networkidle0',
         timeout: 15000,
       });
 
       if (!response || !response.ok()) {
         console.warn(
-          `Failed to load image ${fullUrl}: HTTP ${response?.status() || "unknown"}`,
+          `Failed to load image ${fullUrl}: HTTP ${response?.status() || 'unknown'}`,
         );
         return;
       }
@@ -202,11 +201,11 @@ export class StoryExporter {
       }
 
       // Convert to WebP if enabled
-      let mimeType = "image/jpeg";
+      let mimeType = 'image/jpeg';
       if (this.convertToWebp) {
         try {
           buffer = await sharp(buffer).webp({ quality: 80 }).toBuffer();
-          mimeType = "image/webp";
+          mimeType = 'image/webp';
         } catch (conversionError) {
           console.warn(
             `Failed to convert image to WebP for embedding:`,
@@ -225,12 +224,12 @@ export class StoryExporter {
       }
 
       // Convert to base64 and update story content
-      const base64 = buffer.toString("base64");
+      const base64 = buffer.toString('base64');
       const base64DataUrl = `data:${mimeType};base64,${base64}`;
 
       // Replace the image URL in the story content with the base64 data URL
       story.content = story.content.replace(
-        new RegExp(imageUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+        new RegExp(imageUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
         base64DataUrl,
       );
 
@@ -244,15 +243,15 @@ export class StoryExporter {
 
   private convertHtmlToMarkdown(html: string): string {
     if (!html || html.trim().length === 0) {
-      return "";
+      return '';
     }
 
     const $ = cheerio.load(html);
 
     // Process images first - replace with markdown syntax
-    $("img").each((_, img) => {
-      const src = $(img).attr("src") || "";
-      const alt = $(img).attr("alt") || "";
+    $('img').each((_, img) => {
+      const src = $(img).attr('src') || '';
+      const alt = $(img).attr('alt') || '';
 
       if (src) {
         let imageSrc = src;
@@ -262,7 +261,7 @@ export class StoryExporter {
           // Get the filename from the URL and convert to WebP if needed
           let filename = getFilenameFromUrl(src);
 
-          if (this.convertToWebp && !filename.toLowerCase().endsWith(".webp")) {
+          if (this.convertToWebp && !filename.toLowerCase().endsWith('.webp')) {
             filename = convertToWebpFilename(filename);
           }
 
@@ -276,51 +275,51 @@ export class StoryExporter {
     });
 
     // Convert basic HTML formatting to markdown
-    $("strong, b").each((_, el) => {
+    $('strong, b').each((_, el) => {
       $(el).replaceWith(`**${$(el).text()}**`);
     });
 
-    $("em, i").each((_, el) => {
+    $('em, i').each((_, el) => {
       $(el).replaceWith(`*${$(el).text()}*`);
     });
 
     // Remove links but keep text content
-    $("a").each((_, el) => {
+    $('a').each((_, el) => {
       $(el).replaceWith($(el).text());
     });
 
     // Convert paragraphs to clean markdown with proper spacing
-    let markdown = "";
+    let markdown = '';
 
-    $("p").each((_, p) => {
-      const text = $(p).html() || "";
+    $('p').each((_, p) => {
+      const text = $(p).html() || '';
       if (text.trim()) {
         // Clean up HTML tags and entities
         const cleanText = text
-          .replace(/<br\s*\/?>/gi, " ")
-          .replace(/<[^>]*>/g, "") // Remove remaining HTML tags
+          .replace(/<br\s*\/?>/gi, ' ')
+          .replace(/<[^>]*>/g, '') // Remove remaining HTML tags
           .replace(/&quot;/g, '"') // Convert HTML entities
-          .replace(/&amp;/g, "&")
-          .replace(/&lt;/g, "<")
-          .replace(/&gt;/g, ">")
-          .replace(/\s+/g, " ") // Normalize whitespace
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/\s+/g, ' ') // Normalize whitespace
           .trim();
 
         if (cleanText) {
-          markdown += cleanText + "\n\n";
+          markdown += cleanText + '\n\n';
         }
       }
     });
 
     // If no paragraphs found, fall back to simple text extraction
     if (!markdown.trim()) {
-      markdown = $.text().replace(/\s+/g, " ").trim();
+      markdown = $.text().replace(/\s+/g, ' ').trim();
     }
 
     // Clean up and format the final markdown
     markdown = markdown
-      .replace(/\n\s*\n\s*\n+/g, "\n\n") // Normalize line breaks
-      .replace(/!\[([^\]]*)\]\(([^)]*)\)\s*([A-Z])/g, "![$1]($2)\n\n$3") // Space after images
+      .replace(/\n\s*\n\s*\n+/g, '\n\n') // Normalize line breaks
+      .replace(/!\[([^\]]*)\]\(([^)]*)\)\s*([A-Z])/g, '![$1]($2)\n\n$3') // Space after images
       .trim();
 
     return markdown;
@@ -341,12 +340,12 @@ export class StoryExporter {
     index: number,
   ): Promise<void> {
     const markdown = this.convertHtmlToMarkdown(story.content);
-    const filename = `${String(index).padStart(2, "0")}_${sanitizeFilename(story.title)}.md`;
+    const filename = `${String(index).padStart(2, '0')}_${sanitizeFilename(story.title)}.md`;
     const filepath = path.join(this.outputDir, filename);
 
     // Extract author from the original HTML if possible
     const $ = cheerio.load(story.content);
-    let author = "";
+    let author = '';
     $("a[href*='/user/']").each((_, el) => {
       const authorName = $(el).text().trim();
       if (authorName && !author) {
@@ -356,14 +355,14 @@ export class StoryExporter {
 
     const content = `# ${story.title}
 
-${author ? `**Author:** ${author}\n` : ""}**Source URL:** ${story.url}
+${author ? `**Author:** ${author}\n` : ''}**Source URL:** ${story.url}
 
 ---
 
 ${markdown}
 `;
 
-    await fs.writeFile(filepath, content, "utf-8");
+    await fs.writeFile(filepath, content, 'utf-8');
     console.log(`Saved: ${filename}`);
   }
 
@@ -382,7 +381,7 @@ ${markdown}
       `Combining ${this.combinedStories.length} stories into a single file`,
     );
 
-    let combinedContent = "";
+    let combinedContent = '';
     const allAuthors = new Set<string>();
     const allUrls: string[] = [];
 
@@ -410,7 +409,7 @@ ${markdown}
 
 ${markdown}
 
-${index < this.combinedStories.length - 1 ? "\n---\n\n" : ""}`;
+${index < this.combinedStories.length - 1 ? '\n---\n\n' : ''}`;
     }
 
     // Get the main story title from the first story
@@ -421,13 +420,13 @@ ${index < this.combinedStories.length - 1 ? "\n---\n\n" : ""}`;
     // Create header with metadata
     const authorsText =
       allAuthors.size > 0
-        ? `**Authors:** ${Array.from(allAuthors).join(", ")}\n`
-        : "";
+        ? `**Authors:** ${Array.from(allAuthors).join(', ')}\n`
+        : '';
     const header = `# ${mainTitle} - Complete Story
 
 ${authorsText}**Total Chapters:** ${this.combinedStories.length}
 **Source URLs:**
-${allUrls.map((url) => `- ${url}`).join("\n")}
+${allUrls.map((url) => `- ${url}`).join('\n')}
 
 ---
 
@@ -435,7 +434,7 @@ ${allUrls.map((url) => `- ${url}`).join("\n")}
 
     const finalContent = header + combinedContent;
 
-    await fs.writeFile(filepath, finalContent, "utf-8");
+    await fs.writeFile(filepath, finalContent, 'utf-8');
     console.log(`Saved combined story: ${filename}`);
   }
 
@@ -476,7 +475,7 @@ ${allUrls.map((url) => `- ${url}`).join("\n")}
     // so we need to build the tree structure
     const jsonData = this.buildChapterTree();
 
-    await fs.writeFile(filepath, JSON.stringify(jsonData, null, 2), "utf-8");
+    await fs.writeFile(filepath, JSON.stringify(jsonData, null, 2), 'utf-8');
     console.log(`Saved JSON file: ${filename}`);
   }
 

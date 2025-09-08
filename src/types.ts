@@ -41,13 +41,13 @@ export interface CliArguments {
   cookie?: string;
   output: string;
   test: boolean;
-  "test-cookies": boolean;
-  "clear-session": boolean;
-  "no-puppeteer": boolean;
-  "no-webp": boolean;
-  "embed-images": boolean;
-  "single-file": boolean;
-  "json-file": boolean;
+  'test-cookies': boolean;
+  'clear-session': boolean;
+  'no-puppeteer': boolean;
+  'no-webp': boolean;
+  'embed-images': boolean;
+  'single-file': boolean;
+  'json-file': boolean;
   help?: boolean;
   h?: boolean;
 }

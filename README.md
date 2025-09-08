@@ -1,5 +1,7 @@
 # CHYOA Downloader
 
+> Bun-native TypeScript CLI for downloading CHYOA stories (can also be installed via npm).
+
 A TypeScript CLI tool that downloads stories from [chyoa.com](https://chyoa.com/) and converts them to Markdown files, including all parent stories in the story chain. Features interactive authentication, session persistence, and automatic Cloudflare bypass.
 
 ## Features
@@ -22,12 +24,22 @@ A TypeScript CLI tool that downloads stories from [chyoa.com](https://chyoa.com/
 
 ### Global Installation (Recommended)
 
-Install globally via npm:
+You can install globally with Bun (native) or npm.
+
+Using Bun (preferred for fastest cold start):
+
+```bash
+bun add -g chyoa-downloader
+```
+
+Using npm:
+
 ```bash
 npm install -g chyoa-downloader
 ```
 
 Then use anywhere:
+
 ```bash
 chyoa-downloader "https://chyoa.com/chapter/your-story-url"
 ```
@@ -35,18 +47,22 @@ chyoa-downloader "https://chyoa.com/chapter/your-story-url"
 ### Local Development
 
 1. Clone this repository
-2. Install dependencies:
+2. Install dependencies (Bun will read bun.lock):
    ```bash
-   npm install
+   bun install
    ```
-3. Build the project:
+3. Build the project (emits `index.js` bundle):
    ```bash
-   npm run build
+   bun run build
+   ```
+4. Run in watch/dev mode:
+   ```bash
+   bun run dev
    ```
 
 ## Requirements
 
-- Node.js 18+ 
+- Node.js 18+
 - Valid CHYOA account (for accessing protected content)
 
 ## Usage
@@ -60,8 +76,9 @@ chyoa-downloader "https://chyoa.com/chapter/your-story-url"
 ```
 
 The app will automatically:
+
 - Create a subfolder named after the story
-- Prompt for login if authentication is needed  
+- Prompt for login if authentication is needed
 - Save your session for future use
 
 ### With Interactive Authentication (Recommended)
@@ -95,17 +112,20 @@ chyoa-downloader "https://chyoa.com/chapter/your-story-url" --no-puppeteer
 ### Image Processing Options
 
 **Convert images to WebP (default):**
+
 ```bash
 chyoa-downloader "https://chyoa.com/chapter/your-story-url"
 # Images are automatically converted to WebP format to save space
 ```
 
 **Keep original image formats:**
+
 ```bash
 chyoa-downloader "https://chyoa.com/chapter/your-story-url" --no-webp
 ```
 
 **Embed images as base64 in Markdown:**
+
 ```bash
 chyoa-downloader "https://chyoa.com/chapter/your-story-url" --embed-images
 # No separate image files - everything embedded in the markdown
@@ -114,12 +134,14 @@ chyoa-downloader "https://chyoa.com/chapter/your-story-url" --embed-images
 ### Output Format Options
 
 **Save each chapter as separate files (default):**
+
 ```bash
 chyoa-downloader "https://chyoa.com/chapter/your-story-url"
 # Creates 00_chapter1.md, 01_chapter2.md, etc.
 ```
 
 **Save all chapters to a single file:**
+
 ```bash
 chyoa-downloader "https://chyoa.com/chapter/your-story-url" --single-file
 # Creates story_title_complete.md with all chapters combined
@@ -128,6 +150,7 @@ chyoa-downloader "https://chyoa.com/chapter/your-story-url" --single-file
 ### Session Management
 
 **Interactive Login (Easiest):**
+
 1. Run the downloader without cookies
 2. When prompted, choose 'y' for interactive login
 3. Browser will open - log in normally
@@ -135,6 +158,7 @@ chyoa-downloader "https://chyoa.com/chapter/your-story-url" --single-file
 5. Your session is automatically saved for 24 hours!
 
 **Manual Session Cookies:**
+
 1. Log into chyoa.com in your browser
 2. Open Developer Tools (F12)
 3. Go to Application/Storage tab > Cookies > https://chyoa.com
@@ -143,6 +167,7 @@ chyoa-downloader "https://chyoa.com/chapter/your-story-url" --single-file
 6. Use the format: `--cookie "laravel_session=value1; other_cookie=value2"`
 
 **Clear Saved Session:**
+
 ```bash
 chyoa-downloader --clear-session
 ```
@@ -153,9 +178,11 @@ Sessions are stored in `~/.config/chyoa-downloader/session.json`
 ### Command Line Options
 
 **Positional Arguments:**
+
 - `url`: CHYOA story URL to download (can be used without flag)
 
 **Options:**
+
 - `-c, --cookie`: Session cookie for authentication
 - `-o, --output`: Base output directory (default: "downloaded_stories")
 - `--clear-session`: Clear saved session and force re-authentication
@@ -211,6 +238,7 @@ chyoa-downloader --clear-session
 The application creates the following directory structure:
 
 **Default mode (separate files with WebP images):**
+
 ```
 downloaded_stories/
 └── story_title/                    # Named after the input URL's story
@@ -224,6 +252,7 @@ downloaded_stories/
 ```
 
 **Single file mode (`--single-file`):**
+
 ```
 downloaded_stories/
 └── story_title/
@@ -235,6 +264,7 @@ downloaded_stories/
 ```
 
 **Embedded images mode (`--embed-images`):**
+
 ```
 downloaded_stories/
 └── story_title/
@@ -247,13 +277,13 @@ downloaded_stories/
 
 1. **Story Chain Discovery**: Starting from the provided URL, the application traces back through parent stories to find the complete story chain
 2. **Content Extraction**: Downloads HTML content from each story page
-3. **Image Processing**: 
-   - Downloads all embedded images 
+3. **Image Processing**:
+   - Downloads all embedded images
    - Converts to WebP format by default (80% quality) to save space
    - Can embed as base64 data URLs with `--embed-images`
    - Updates references to local paths or data URLs
 4. **Markdown Conversion**: Converts HTML content to clean Markdown format
-5. **File Organization**: 
+5. **File Organization**:
    - Saves stories in chronological order (parents first)
    - Can save as separate files (default) or combined into single file (`--single-file`)
 
@@ -271,6 +301,7 @@ The application has been successfully tested with:
 https://chyoa.com/chapter/The-great-east-shift-%28race-change%29-Michelle.1392983
 
 **Test Results:**
+
 - ✅ Successfully bypassed Cloudflare protection with Puppeteer
 - ✅ Downloaded 5 stories in the complete chain
 - ✅ Converted all content to clean Markdown format
@@ -311,26 +342,26 @@ The application provides clear error messages for common issues:
 ### Development
 
 ```bash
-# Run in development mode
-npm run dev
+# Run in development mode (watch)
+bun run dev
 
-# Build for production
-npm run build
+# Build for production (bundles to index.js)
+bun run build
 
 # Test the built version
-./index.js "https://chyoa.com/chapter/example"
+bun index.js "https://chyoa.com/chapter/example"
 ```
 
 ### Project Structure
 
-- `index.ts`: Main application and CLI interface  
+- `index.ts`: Main application and CLI interface
 - `package.json`: Project configuration and dependencies
 - `README.md`: Documentation
 
 ## Dependencies
 
 - **yargs**: Command-line argument parsing
-- **cheerio**: HTML parsing and manipulation  
+- **cheerio**: HTML parsing and manipulation
 - **puppeteer**: Browser automation for Cloudflare bypass
 - **sharp**: Image processing and WebP conversion
 - **@types/yargs**: TypeScript definitions
@@ -339,13 +370,25 @@ npm run build
 
 ## Publishing
 
-This package is designed to be published to npm. To publish:
+This package is Bun-native but fully compatible with npm.
+
+To publish (with Bun):
+
+1. Update the version in `package.json`
+2. Build: `bun run build`
+3. (Optional sanity check) Dry run: `bun publish --dry-run`
+4. Publish: `bun publish --access public`
+
+Alternative (with npm):
 
 1. Update version in `package.json`
-2. Run `npm run build`
-3. Run `npm publish`
+2. Build: `bun run build` (still fastest)
+3. Publish: `npm publish`
 
-Users can then install with: `npm install -g chyoa-downloader`
+Users can install with either:
+
+- Bun: `bun add -g chyoa-downloader`
+- npm: `npm install -g chyoa-downloader`
 
 ## License
 
