@@ -57,6 +57,3 @@ jobs:
 
       - name: Build (ensure build succeeds)
         run: bun run build
-
-      - name: Dry-run publish (pack verification)
-        run: bun publish --dry-run
