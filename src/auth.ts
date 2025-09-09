@@ -21,7 +21,7 @@ export class AuthManager {
     this.credentials = credentials;
 
     // Store session file in user's config directory
-    const configDir = path.join(os.homedir(), '.config', 'chyoa-download');
+    const configDir = path.join(os.homedir(), '.config', 'cyoa-cli');
     this.sessionFile = path.join(configDir, 'session.json');
   }
 

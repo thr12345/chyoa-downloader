@@ -29,19 +29,19 @@ You can install globally with Bun (native) or npm.
 Using Bun (preferred for fastest cold start):
 
 ```bash
-bun add -g chyoa-download
+bun add -g cyoa-cli
 ```
 
 Using npm:
 
 ```bash
-npm install -g chyoa-download
+npm install -g cyoa-cli
 ```
 
 Then use anywhere:
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url"
+cyoa-cli "https://chyoa.com/chapter/your-story-url"
 ```
 
 ### Local Development
@@ -72,7 +72,7 @@ chyoa-download "https://chyoa.com/chapter/your-story-url"
 Download any CHYOA story with a simple command:
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url"
+cyoa-cli "https://chyoa.com/chapter/your-story-url"
 ```
 
 The app will automatically:
@@ -86,7 +86,7 @@ The app will automatically:
 When authentication is needed for protected content, the app will automatically prompt you:
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url"
+cyoa-cli "https://chyoa.com/chapter/your-story-url"
 # 🔐 Authentication required for full story access (including images)
 # Would you like to log in interactively? (y/n)
 # Choose 'y' to open a browser window for easy login
@@ -98,7 +98,7 @@ chyoa-download "https://chyoa.com/chapter/your-story-url"
 You can also provide session cookies directly:
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url" -c "laravel_session=your_session_cookie"
+cyoa-cli "https://chyoa.com/chapter/your-story-url" -c "laravel_session=your_session_cookie"
 ```
 
 ### Without Puppeteer (Legacy Mode)
@@ -106,7 +106,7 @@ chyoa-download "https://chyoa.com/chapter/your-story-url" -c "laravel_session=yo
 If you want to use direct HTTP requests instead of browser automation:
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url" --no-puppeteer
+cyoa-cli "https://chyoa.com/chapter/your-story-url" --no-puppeteer
 ```
 
 ### Image Processing Options
@@ -114,20 +114,20 @@ chyoa-download "https://chyoa.com/chapter/your-story-url" --no-puppeteer
 **Convert images to WebP (default):**
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url"
+cyoa-cli "https://chyoa.com/chapter/your-story-url"
 # Images are automatically converted to WebP format to save space
 ```
 
 **Keep original image formats:**
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url" --no-webp
+cyoa-cli "https://chyoa.com/chapter/your-story-url" --no-webp
 ```
 
 **Embed images as base64 in Markdown:**
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url" --embed-images
+cyoa-cli "https://chyoa.com/chapter/your-story-url" --embed-images
 # No separate image files - everything embedded in the markdown
 ```
 
@@ -136,14 +136,14 @@ chyoa-download "https://chyoa.com/chapter/your-story-url" --embed-images
 **Save each chapter as separate files (default):**
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url"
+cyoa-cli "https://chyoa.com/chapter/your-story-url"
 # Creates 00_chapter1.md, 01_chapter2.md, etc.
 ```
 
 **Save all chapters to a single file:**
 
 ```bash
-chyoa-download "https://chyoa.com/chapter/your-story-url" --single-file
+cyoa-cli "https://chyoa.com/chapter/your-story-url" --single-file
 # Creates story_title_complete.md with all chapters combined
 ```
 
@@ -169,11 +169,11 @@ chyoa-download "https://chyoa.com/chapter/your-story-url" --single-file
 **Clear Saved Session:**
 
 ```bash
-chyoa-download --clear-session
+cyoa-cli --clear-session
 ```
 
 **Session Location:**
-Sessions are stored in `~/.config/chyoa-download/session.json`
+Sessions are stored in `~/.config/cyoa-cli/session.json`
 
 ### Command Line Options
 
@@ -200,37 +200,37 @@ Sessions are stored in `~/.config/chyoa-download/session.json`
 
 ```bash
 # Download with interactive login (recommended)
-chyoa-download "https://chyoa.com/chapter/example.123456"
+cyoa-cli "https://chyoa.com/chapter/example.123456"
 
 # Download with manual session cookie
-chyoa-download "https://chyoa.com/chapter/example.123456" -c "laravel_session=abc123"
+cyoa-cli "https://chyoa.com/chapter/example.123456" -c "laravel_session=abc123"
 
 # Download to custom base directory
-chyoa-download "https://chyoa.com/chapter/example.123456" -o "my_stories"
+cyoa-cli "https://chyoa.com/chapter/example.123456" -o "my_stories"
 
 # Save all chapters to a single file
-chyoa-download "https://chyoa.com/chapter/example.123456" --single-file
+cyoa-cli "https://chyoa.com/chapter/example.123456" --single-file
 
 # Embed images as base64 in markdown (no separate image files)
-chyoa-download "https://chyoa.com/chapter/example.123456" --embed-images
+cyoa-cli "https://chyoa.com/chapter/example.123456" --embed-images
 
 # Keep original image formats (disable WebP conversion)
-chyoa-download "https://chyoa.com/chapter/example.123456" --no-webp
+cyoa-cli "https://chyoa.com/chapter/example.123456" --no-webp
 
 # Combine options: single file with embedded images
-chyoa-download "https://chyoa.com/chapter/example.123456" --single-file --embed-images
+cyoa-cli "https://chyoa.com/chapter/example.123456" --single-file --embed-images
 
 # Clear saved session before downloading
-chyoa-download "https://chyoa.com/chapter/example.123456" --clear-session
+cyoa-cli "https://chyoa.com/chapter/example.123456" --clear-session
 
 # Use direct HTTP requests (may be blocked by Cloudflare)
-chyoa-download "https://chyoa.com/chapter/example.123456" --no-puppeteer
+cyoa-cli "https://chyoa.com/chapter/example.123456" --no-puppeteer
 
 # Test connectivity without downloading
-chyoa-download --test
+cyoa-cli --test
 
 # Clear session only
-chyoa-download --clear-session
+cyoa-cli --clear-session
 ```
 
 ## Output Structure
@@ -387,8 +387,8 @@ Alternative (with npm):
 
 Users can install with either:
 
-- Bun: `bun add -g chyoa-download`
-- npm: `npm install -g chyoa-download`
+- Bun: `bun add -g cyoa-cli`
+- npm: `npm install -g cyoa-cli`
 
 ## License
 
