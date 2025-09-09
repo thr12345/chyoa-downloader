@@ -10,6 +10,7 @@ on:
 
 jobs:
   publish:
+    needs: test
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
 
@@ -28,18 +29,31 @@ jobs:
       - name: Type check
         run: bunx tsc --noEmit
 
-      - name: Build package
-        run: bun run build
-
-      - name: Smoke test CLI
-        run: bun index.js --help
+      # Auth config (ensure Bun sees token)
+      - name: Configure npm auth
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+          # Sanity check (token will be masked)
+          bunx npm whoami
+          echo "NODE_AUTH_TOKEN length: ${#NODE_AUTH_TOKEN}"
+          sed -n '1,5p' ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Verify package contents (dry run publish)
-        run: bun publish --dry-run
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_USERCONFIG: /home/runner/.npmrc
+        run: bun publish --dry-run
 
       - name: Publish to NPM (bun)
-        run: bun publish --access public
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_USERCONFIG: /home/runner/.npmrc
+        run: bun publish --access public
