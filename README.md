@@ -1,4 +1,4 @@
-# CHYOA Downloader
+# CYOA Downloader CLI
 
 > Bun-native TypeScript CLI for downloading CHYOA stories (can also be installed via npm).
 
