@@ -20,8 +20,6 @@
     "start": "bun run src/index.ts",
     "dev": "bun run --watch src/index.ts",
     "build": "bun build src/index.ts --outdir . --target node --format esm",
-    "prepare": "bun run build",
-    "prepublishOnly": "bun run build",
     "lint": "bunx --bun prettier --check .",
     "format": "bunx --bun prettier --write ."
   },

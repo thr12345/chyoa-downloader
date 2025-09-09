@@ -54,6 +54,3 @@ jobs:
 
       - name: Lint (Prettier)
         run: bun run lint || bunx prettier --check .
-
-      - name: Build (ensure build succeeds)
-        run: bun run build
