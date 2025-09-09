@@ -30,7 +30,7 @@ jobs:
         run: bun run build
 
       - name: Smoke test CLI
-        run: bun index.js --help
+        run: bun run index.js --help
 
   publish:
     needs: test
