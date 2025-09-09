@@ -1,7 +1,7 @@
 {
   "name": "chyoa-downloader",
   "version": "1.0.0",
-  "packageManager": "bun@1.1.0",
+  "packageManager": "bun@1.2.21",
   "description": "A CLI tool to download CHYOA stories and their parent stories as markdown files, with WebP image conversion, base64 embedding, single-file output, interactive login and session persistence",
   "main": "index.js",
   "type": "module",
@@ -47,7 +47,7 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "bun": ">=1.0.0"
+    "bun": ">=1.2.21"
   },
   "files": [
     "index.js",
