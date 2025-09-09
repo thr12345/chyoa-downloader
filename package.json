@@ -1,5 +1,5 @@
 {
-  "name": "chyoa-downloader",
+  "name": "chyoa-download",
   "version": "1.0.0",
   "packageManager": "bun@1.2.21",
   "description": "A CLI tool to download CHYOA stories and their parent stories as markdown files, with WebP image conversion, base64 embedding, single-file output, interactive login and session persistence",
@@ -13,7 +13,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "chyoa-downloader": "index.js"
+    "chyoa-download": "index.js"
   },
   "sideEffects": false,
   "scripts": {
@@ -36,11 +36,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thr12345/chyoa-downloader.git"
+    "url": "https://github.com/thr12345/chyoa-download.git"
   },
-  "homepage": "https://github.com/thr12345/chyoa-downloader",
+  "homepage": "https://github.com/thr12345/chyoa-download",
   "bugs": {
-    "url": "https://github.com/thr12345/chyoa-downloader/issues"
+    "url": "https://github.com/thr12345/chyoa-download/issues"
   },
   "publishConfig": {
     "access": "public"

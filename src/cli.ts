@@ -443,7 +443,7 @@ export async function cliEntry() {
       console.log('2. Open Developer Tools (F12) > Application > Cookies');
       console.log('3. Copy the cookies from https://chyoa.com');
       console.log(
-        '4. Run: chyoa-downloader -u "STORY_URL" -c "laravel_session=...; other_cookie=..."',
+        '4. Run: chyoa-download -u "STORY_URL" -c "laravel_session=...; other_cookie=..."',
       );
       console.log('');
       console.log(
