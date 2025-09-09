@@ -31,10 +31,7 @@ jobs:
         run: bun run build
 
       - name: Smoke test CLI
-        run: |
-          ls -la
-          test -f index.js && echo "index.js exists" || (echo "index.js missing"; ls -la src && exit 1)
-          bun index.js --help
+        run: bun index.js --help
 
   publish:
     needs: test
@@ -59,14 +56,14 @@ jobs:
       - name: Build package
         run: bun run build
 
-      - name: Verify package contents (dry run publish)
-        run: bun publish --dry-run
-
       - name: Configure npm auth
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Verify package contents (dry run publish)
+        run: bun publish --dry-run
 
       - name: Publish to NPM (bun)
         run: bun publish --access public
