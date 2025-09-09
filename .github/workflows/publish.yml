@@ -31,7 +31,10 @@ jobs:
         run: bun run build
 
       - name: Smoke test CLI
-        run: bun run index.js --help
+        run: |
+          ls -la
+          test -f index.js && echo "index.js exists" || (echo "index.js missing"; ls -la src && exit 1)
+          bun index.js --help
 
   publish:
     needs: test
