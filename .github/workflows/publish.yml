@@ -44,16 +44,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Debug npm auth
-        run: |
-          echo "HOME=$HOME"
-          echo "Listing ~/.npmrc (masked):"
-          sed -n '1,5p' ~/.npmrc
-          echo "Env NODE_AUTH_TOKEN length: ${#NODE_AUTH_TOKEN}"
-          npm whoami
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Dry run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

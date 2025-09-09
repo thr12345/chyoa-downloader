@@ -233,6 +233,14 @@ Project files:
 
 ## Publishing
 
+Update version in package.json and then push a new git tag
+
+```bash
+git tag v1.2.3 && git push --tag
+```
+
+Or push manually
+
 Bun:
 
 ```bash
