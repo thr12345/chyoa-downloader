@@ -1,6 +1,6 @@
 {
   "name": "cyoa-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "packageManager": "bun@1.2.21",
   "description": "A CLI tool to download CHYOA stories and their parent stories as markdown files, with WebP image conversion, base64 embedding, single-file output, interactive login and session persistence",
   "main": "index.js",
